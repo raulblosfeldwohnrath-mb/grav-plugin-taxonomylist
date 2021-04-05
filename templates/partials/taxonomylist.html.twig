@@ -1,10 +1,15 @@
 {% set taxlist = children_only is defined ? taxonomylist.getChildPagesTags() : taxonomylist.get() %}
+{% set categoryList = [] %}
 
-{% if taxlist %}
-    {% for tax,value in taxlist[taxonomy] %}
-        {% set active = uri.param(taxonomy) == tax? 'active' : '' %}
+{# CLEAN THE ORIGINAL ARRAY #}
+{% for tax, index in taxlist[taxonomy] %}
+    {% set categoryList = categoryList|merge([tax|capitalize]) %}
+{% endfor %}
+
+{% if categoryList %}
+    {% for category in categoryList|sort %}
         <li>
-            <a class="{{ active }}" href="{{ base_url }}/{{ taxonomy }}{{ config.system.param_sep }}{{ tax }}">{{ tax }}</a>
+            <a href="{{ base_url }}/{{ taxonomy }}{{ config.system.param_sep }}{{ category|lower }}">{{ category|capitalize }}</a>
         </li>
     {% endfor %}
 {% endif %}
